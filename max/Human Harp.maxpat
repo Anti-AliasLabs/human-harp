@@ -984,7 +984,7 @@
 		"dependency_cache" : [ 			{
 				"name" : "Logo_big.jpg",
 				"bootpath" : "/Users/adamstark/Documents/Code/Projects/Human Harp",
-				"patcherrelativepath" : "",
+				"patcherrelativepath" : "../../Human Harp",
 				"type" : "JPEG",
 				"implicit" : 1
 			}
