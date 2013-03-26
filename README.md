@@ -1,2 +1,2 @@
-human-harp
+Human Harp
 ==========
