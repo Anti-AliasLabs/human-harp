@@ -5,6 +5,7 @@ String inString = "";
 
 int hall1 = -2; // haven't recieved any data from Arduino
 int hall2 = -2;
+int rotations = -1;
 
 void setup() {
   size( 700, 500 ); 
@@ -19,6 +20,7 @@ void setup() {
 void draw() {
   background( 50 );
   drawHalls();
+  drawRotations();
 }
 
 //----DRAWING FUNCTIONS----------------------------------
@@ -42,10 +44,10 @@ void drawHalls() {
     break;
   }
 
-ellipse(90, 50, 30, 30);
+  ellipse(90, 50, 30, 30);
 
 
-switch( hall2 ) {
+  switch( hall2 ) {
   case -2:
     noFill();
     stroke(0);
@@ -60,15 +62,22 @@ switch( hall2 ) {
     fill( 30, 198, 198 );
     break;
   }
-ellipse(90, 130, 30, 30);
+  ellipse(90, 130, 30, 30);
 
-// text labels
-fill(255);
-text("Hall Effect Sensor 1 ", 40, 80);
-text(hall1, 85, 55);
+  // text labels
+  fill(255);
+  text("Hall Effect Sensor 1 ", 40, 80);
+  text(hall1, 85, 55);
 
-text("Hall Effect Sensor 2 ", 40, 160);
-text(hall2, 85, 135);
+  text("Hall Effect Sensor 2 ", 40, 160);
+  text(hall2, 85, 135);
+}
+
+void drawRotations( ) {
+  // text labels
+  fill(255);
+  text("Rotations ", 180, 60 );
+  text( rotations, 200, 90 );
 }
 
 //----SERIAL FUNCTIONS----------------------------------
@@ -97,6 +106,9 @@ void parseString( String serialString ) {
     }
     if (label.equals("hall2")) {
       hall2 = int(trimVal);
+    }
+    if (label.equals("rotations")) {
+      rotations = int(trimVal);
     }
   }
 }
