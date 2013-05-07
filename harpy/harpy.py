@@ -18,14 +18,15 @@
 
 from OSC import OSCClient, OSCMessage
 import serial
+import shlex
 
 client = OSCClient()
-client.connect( ("localhost", 12000) )
+client.connect( ("127.0.0.1", 12000) )
 
 # may need to run python -m serial.tools.list_ports
 # from the terminal to find correct port name
-ser = serial.Serial("/dev/tty.usbmodem1d11")  
-
+#ser = serial.Serial("/dev/tty.usbmodem1d11")  
+ser = serial.Serial("/dev/ttyACM0")
 
 # sends OSC message for angle
 def send_angle( harp_id, angle_id, angle):
@@ -51,6 +52,20 @@ def send_acceleration( harp_id, acceleration ):
     client.send( OSCMessage( addr, acceleration ) )
 
 
+# read in next line from serial port
+def process_next_line( ):
+    line_in = ser.readline()
+    # print line_in
+    #serial_dict = {}
+    #for token in shlex.split( line_in ):
+    #   if ':' in token:
+    #        serial_dict.update( token.split(':') )
+    #         print token.split( ':')
+      
+    serial_dict = dict( [token.split(':') for token in shlex.split(line_in) if len(token.split(':'))==2] )
+    print serial_dict
+
+
 def main():    
     send_rotations( 7, 5 )
     send_angle( 7, 0, 527 )
@@ -58,6 +73,9 @@ def main():
     send_acceleration( 3, 2 )
     
     print ser.portstr       # check which port was really used
+    process_next_line()
+    process_next_line()
+    process_next_line()   
     ser.close()
     
 

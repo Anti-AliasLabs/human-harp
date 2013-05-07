@@ -45,11 +45,11 @@ void loop() {
   }
 
   // print via Serial the different values
-  Serial.print("hall1: ");
+  Serial.print("hall1:");
   Serial.print( hallValue1 );
-  Serial.print(", hall2: " );
+  Serial.print(", hall2:" );
   Serial.print( hallValue2 );
-  Serial.print(", rotations: ");
+  Serial.print(", rotations:");
   Serial.print( rotationCount );
   Serial.println(",");
 
