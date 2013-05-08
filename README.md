@@ -11,7 +11,9 @@ harpduino is the Arduino sketches for the Human Harp Modules.  No non-standard l
 
 TODO: There will be a master module sketch.
 
-NOTE: Currently the reset button has a pulldown resistor.  This should be changed to use the internal pullup instead.
+NOTE: 
+- Currently the reset button has a pulldown resistor.  This should be changed to use the internal pullup instead.
+- In module.fzz, the wrong Sparkfun charger board is being used.  Needs to be Charger/Booster, not Charger.
 
 
 harpy
