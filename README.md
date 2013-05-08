@@ -14,7 +14,7 @@ TODO: there will be a master module sketch.
 
 harpy
 -----
-harpy is a Python script that reads the input serial data and outputs OSC messages along with calculating higher order information such as speed and acceleration.
+harpy is a Python script that reads the input serial data and outputs OSC messages along with calculating higher order information such as speed and acceleration.  Dependencies are [PySerial](http://pyserial.sourceforge.net/ and [pyOSC](http://gitorious.org/pyosc/.
 
 
 debug-serial
