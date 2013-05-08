@@ -12,13 +12,13 @@ harpduino is the Arduino sketches for the Human Harp Modules.  No non-standard l
 TODO: There will be a master module sketch.
 
 NOTE: 
-- Currently the reset button has a pulldown resistor.  This should be changed to use the internal pullup instead.
-- In module.fzz, the wrong Sparkfun charger board is being used.  Needs to be Charger/Booster, not Charger.
+* Currently the reset button has a pulldown resistor.  This should be changed to use the internal pullup instead.
+* In module.fzz, the wrong Sparkfun charger board is being used.  Needs to be Charger/Booster, not Charger.
 
 
 harpy
 -----
-harpy is a Python script that reads the input serial data and outputs OSC messages along with calculating higher order information such as speed and acceleration.  Dependencies are [PySerial](http://pyserial.sourceforge.net/ and [pyOSC](http://gitorious.org/pyosc/.
+harpy is a Python script that reads the input serial data and outputs OSC messages along with calculating higher order information such as speed and acceleration.  Dependencies are [PySerial](http://pyserial.sourceforge.net/) and [pyOSC](http://gitorious.org/pyosc/).
 
 
 debug-serial
