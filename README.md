@@ -9,7 +9,9 @@ harpduino
 
 harpduino is the Arduino sketches for the Human Harp Modules.  No non-standard libraries are needed.  See Fritzing document for circuit information.
 
-TODO: there will be a master module sketch.
+TODO: There will be a master module sketch.
+
+NOTE: Currently the reset button has a pulldown resistor.  This should be changed to use the internal pullup instead.
 
 
 harpy
