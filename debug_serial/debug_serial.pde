@@ -8,7 +8,7 @@ int hall2 = -2;
 int rotations = -1;
 
 void setup() {
-  size( 700, 500 ); 
+  size( 700, 300 ); 
 
   // print list of serial ports
   //println(Serial.list() );
@@ -78,6 +78,12 @@ void drawRotations( ) {
   fill(255);
   text("Rotations ", 180, 60 );
   text( rotations, 200, 90 );
+  
+  fill( 182, 25, 209 );
+  float rotBar = map( rotations, 0, 200, 0, width-230-50 );
+  rect( 230, 70, rotBar, 25 );
+  fill( 76, 11, 85 );
+  rect( 230, 70, 3, 25 ); // zero marker
 }
 
 //----SERIAL FUNCTIONS----------------------------------
