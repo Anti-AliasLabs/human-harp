@@ -58,24 +58,36 @@ def process_next_line( ):
     # print line_in
       
     serial_dict = dict( [token.split(':') for token in shlex.split(line_in) if len(token.split(':'))==2] )
-    print serial_dict
+    # print serial_dict
     # send rotations OSC
     if "rotations" in serial_dict:
-        send_rotations( 45, int( serial_dict["rotations"].strip(',') ) )
- 
+        r = int( serial_dict["rotations"].strip(',') )
+        send_rotations( 45, r )
+        # calculate and send speed
+        s = calculate_speed( r )
+        send_speed( 45, s )
+        # calculate and send acceleration 
+        a = calculate_acceleration( r)
+        send_acceleration( 45, a )
 
 
 # calculate speed
+def calculate_speed( rotations ):
+    return rotations
 
 # calculate acceleration
+def calculate_acceleration( rotations ):
+    return rotations
 
 
 def main():    
     print ser.portstr       # check which port was really used
-    process_next_line()
-    process_next_line()
-    process_next_line()   
-    ser.close()
+    try:
+        while 1:    
+            process_next_line()
+    except KeyboardInterrupt: 
+        ser.close()
+        print "Goodbye!"
     
 
 if __name__ == '__main__':
