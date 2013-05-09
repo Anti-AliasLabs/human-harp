@@ -52,26 +52,25 @@ def send_acceleration( harp_id, acceleration ):
     client.send( OSCMessage( addr, acceleration ) )
 
 
-# read in next line from serial port
+# read in next line from serial port and parse
 def process_next_line( ):
     line_in = ser.readline()
     # print line_in
-    #serial_dict = {}
-    #for token in shlex.split( line_in ):
-    #   if ':' in token:
-    #        serial_dict.update( token.split(':') )
-    #         print token.split( ':')
       
     serial_dict = dict( [token.split(':') for token in shlex.split(line_in) if len(token.split(':'))==2] )
     print serial_dict
+    # send rotations OSC
+    if "rotations" in serial_dict:
+        send_rotations( 45, int( serial_dict["rotations"].strip(',') ) )
+ 
+
+
+# calculate speed
+
+# calculate acceleration
 
 
 def main():    
-    send_rotations( 7, 5 )
-    send_angle( 7, 0, 527 )
-    send_speed( 2, 20 )
-    send_acceleration( 3, 2 )
-    
     print ser.portstr       # check which port was really used
     process_next_line()
     process_next_line()
