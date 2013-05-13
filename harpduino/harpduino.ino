@@ -9,14 +9,16 @@
  
  A0     Light sensor 1
  A1     Light sensor 2
- A2     Light sensor 3
- A3     Light sensor 4
+ D8     IR LED 1
+ D9     IR LED 2
  */
 
 // pins
 int pinHall1 = 2;
 int pinHall2 = 3;
 int resetButton = 8;
+int pinIR1 = 8;
+int pinAngle1 = A0;
 
 // other variables
 volatile int hallValue1 = -1;
@@ -25,12 +27,18 @@ volatile int prevHallValue1 = -1;
 volatile int prevHallValue2 = -1;
 volatile int rotationCount = 0;
 
+int ambientLight1;
+int angleValue1;
+
 void setup() {
   Serial.begin( 9600 ); 
 
   pinMode( pinHall1, INPUT );
   pinMode( pinHall2, INPUT );
   pinMode( resetButton, INPUT );
+  pinMode( pinIR1, OUTPUT );
+  
+  resetSensors();
 
   attachInterrupt( 0, firstHallTripped, CHANGE );
   attachInterrupt( 1, secondHallTripped, CHANGE );
@@ -41,8 +49,11 @@ void loop() {
   // if button is pressed
   if ( digitalRead( resetButton ) ) {
     // reset the values
-    rotationCount = 0;
+    resetSensors();
   }
+  
+  // read in angle sensors
+  angleValue1 = ambientLight1 - analogRead( pinAngle1 );
 
   // print via Serial the different values
   Serial.print("hall1:");
@@ -51,11 +62,24 @@ void loop() {
   Serial.print( hallValue2 );
   Serial.print(", rotations:");
   Serial.print( rotationCount );
+  Serial.print( ", angle1:" );
+  Serial.print( angleValue1 );
   Serial.println(",");
 
   delay( 200 );
 }
 
+// reset rotations count and background light
+void resetSensors() {
+  rotationCount = 0;
+  
+  digitalWrite( pinIR1, LOW );
+  ambientLight1 = analogRead( pinAngle1 );
+  delay( 10 );
+  
+  digitalWrite( pinIR1, HIGH );
+  
+}
 
 // called when magnetic field changes
 // across first Hall Effect sensor
