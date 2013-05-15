@@ -63,6 +63,11 @@ def process_next_line( ):
     serial_dict = dict( [token.split(':') for token in shlex.split(line_in) if len(token.split(':'))==2] )
     # print serial_dict
     # send rotations OSC
+
+    if "angle1" in serial_dict:
+        a = int( serial_dict["angle1"].strip(',') )
+        send_angle( 45, 1, a )
+
     if "rotations" in serial_dict:
         r = int( serial_dict["rotations"].strip(',') )
         send_rotations( 45, r )
@@ -72,6 +77,7 @@ def process_next_line( ):
         # calculate and send acceleration 
         a = calculate_acceleration( r)
         send_acceleration( 45, a )
+
 
 
 # calculate speed
