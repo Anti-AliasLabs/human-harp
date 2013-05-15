@@ -23,10 +23,13 @@ import shlex
 client = OSCClient()
 client.connect( ("127.0.0.1", 12000) )
 
+prev_rotations = 0
+
 # may need to run python -m serial.tools.list_ports
 # from the terminal to find correct port name
 #ser = serial.Serial("/dev/tty.usbmodem1d11")  
-ser = serial.Serial("/dev/ttyACM0")
+ser = serial.Serial("/dev/tty.usbmodemfd121")
+#ser = serial.Serial("/dev/ttyACM0")
 
 # sends OSC message for angle
 def send_angle( harp_id, angle_id, angle):
@@ -73,7 +76,10 @@ def process_next_line( ):
 
 # calculate speed
 def calculate_speed( rotations ):
-    return rotations
+    global prev_rotations
+    speed = abs(rotations - prev_rotations)
+    prev_rotations = rotations
+    return speed
 
 # calculate acceleration
 def calculate_acceleration( rotations ):
