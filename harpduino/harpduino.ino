@@ -3,22 +3,27 @@
  Human Harp Module Arduino Code
  
  D0, D1 Serial
+ A4, A5 I2C
+ 
  D2     Hall Effect sensor
  D3     Hall Effect sensor located to after first sensor
  (clockwise with rotation of spindle)
  
  A0     Light sensor 1
  A1     Light sensor 2
- D8     IR LED 1
- D9     IR LED 2
+ D8     Reset button
+ D9     IR LED 1
+ D10    IR LED 2
  */
 
 // pins
 int pinHall1 = 2;
 int pinHall2 = 3;
-int resetButton = 8;
-int pinIR1 = 8;
-int pinAngle1 = A0;
+int resetButton = 6;
+int pinIR1 = 4;
+int pinIR2 = 5;
+int pinAngle1 = A1;
+int pinAngle2 = A2;
 
 // other variables
 volatile int hallValue1 = -1;
@@ -28,7 +33,9 @@ volatile int prevHallValue2 = -1;
 volatile int rotationCount = 0;
 
 int ambientLight1;
+int ambientLight2;
 int angleValue1;
+int angleValue2;
 
 void setup() {
   Serial.begin( 9600 ); 
@@ -37,6 +44,7 @@ void setup() {
   pinMode( pinHall2, INPUT );
   pinMode( resetButton, INPUT );
   pinMode( pinIR1, OUTPUT );
+  pinMode( pinIR2, OUTPUT );
   
   resetSensors();
 
@@ -54,6 +62,7 @@ void loop() {
   
   // read in angle sensors
   angleValue1 = ambientLight1 - analogRead( pinAngle1 );
+  angleValue2 = ambientLight2 - analogRead( pinAngle2 );
 
   // print via Serial the different values
   Serial.print("hall1:");
@@ -64,6 +73,8 @@ void loop() {
   Serial.print( rotationCount );
   Serial.print( ", angle1:" );
   Serial.print( angleValue1 );
+  Serial.print(", angle2:" );
+  Serial.print( angleValue2 );
   Serial.println(",");
 
   delay( 200 );
@@ -74,10 +85,13 @@ void resetSensors() {
   rotationCount = 0;
   
   digitalWrite( pinIR1, LOW );
+  digitalWrite( pinIR2, LOW );
   ambientLight1 = analogRead( pinAngle1 );
+  ambientLight2 = analogRead( pinAngle2 );
   delay( 10 );
   
   digitalWrite( pinIR1, HIGH );
+  digitalWrite( pinIR2, HIGH );
   
 }
 

@@ -7,6 +7,8 @@ int hall1 = -2; // haven't recieved any data from Arduino
 int hall2 = -2;
 int rotations = -1;
 
+int angle1 = -1; // haven't received any data from Arduino
+
 void setup() {
   size( 700, 300 ); 
 
@@ -21,6 +23,7 @@ void draw() {
   background( 50 );
   drawHalls();
   drawRotations();
+  drawAngle();
 }
 
 //----DRAWING FUNCTIONS----------------------------------
@@ -78,12 +81,27 @@ void drawRotations( ) {
   fill(255);
   text("Rotations ", 180, 60 );
   text( rotations, 200, 90 );
-  
+
   fill( 182, 25, 209 );
   float rotBar = map( rotations, 0, 200, 0, width-230-50 );
   rect( 230, 70, rotBar, 25 );
   fill( 76, 11, 85 );
   rect( 230, 70, 3, 25 ); // zero marker
+}
+
+void drawAngle( ) {
+  // text labels
+  fill(255);
+  text("Angle 1", 180, 200);
+  text( angle1, 200, 230 );
+  
+  fill( 11, 85, 78 );
+  float angleBar = map( angle1, 5, 30, 0, width-230-50 ); 
+  rect( 230, 210, angleBar, 25 );
+  
+  fill( 0, 71, 50 );
+  rect( 230, 210, 3, 25 ); // zero marker
+  
 }
 
 //----SERIAL FUNCTIONS----------------------------------
@@ -115,6 +133,9 @@ void parseString( String serialString ) {
     }
     if (label.equals("rotations")) {
       rotations = int(trimVal);
+    }
+    if (label.equals("angle1")) {
+      angle1 = int(trimVal);
     }
   }
 }
