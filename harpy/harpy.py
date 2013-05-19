@@ -18,14 +18,18 @@
 # /harp/id/acceleration/value_float32
 
 # Send OSC Message Structure
-# /toharp/id/hello
+# /toharp/hello/value_int32
 
-from OSC import OSCClient, OSCMessage
+from OSC import OSCClient, OSCMessage, OSCServer
 import serial
 import shlex
 
 client = OSCClient()
 client.connect( ("127.0.0.1", 12000) )
+
+server = OSCServer( ("127.0.0.1", 12001) )
+server.timeout = 0
+run = True
 
 prev_rotations = 0
 module_id = -1
@@ -35,6 +39,33 @@ module_id = -1
 #ser = serial.Serial("/dev/tty.usbmodem1d11")  
 #ser = serial.Serial("/dev/tty.usbmodemfd121")
 ser = serial.Serial("/dev/ttyACM0")
+
+
+
+
+# this method of reporting timeouts only works by convention
+# that before calling handle_request() field .timed_out is 
+# set to False
+def handle_timeout(self):
+    self.timed_out = True
+
+# following copied from pyOSC example
+# funny python's way to add a method to an instance of a class
+import types
+server.handle_timeout = types.MethodType(handle_timeout, server)
+
+def user_callback(path, tags, args, source):
+    send_hello_to_harp( args[0] )
+
+# user script that's called by the game engine every frame
+def process_server():
+    # clear timed_out flag
+    server.timed_out = False
+    # handle all pending requests then return
+    while not server.timed_out:
+        server.handle_request()
+
+
 
 # sends OSC message for angle
 def send_angle( harp_id, angle_id, angle):
@@ -117,17 +148,14 @@ def calculate_acceleration( rotations ):
 
 def main():    
     print ser.portstr       # check which port was really used
-    i=0    
+    server.addMsgHandler( "/toharp/hello", user_callback )
     try:
         while 1:
-            i = i + 1 
             process_next_line()
-            if i > 50:
-                print "send hello"
-                send_hello_to_harp( 109 )
-                i=0
+            process_server()
     except KeyboardInterrupt: 
         ser.close()
+        server.close()
         print "Goodbye!"
     
 
