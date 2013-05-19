@@ -10,11 +10,15 @@
 # April 2013
 # --------------------------------------------
 
-# OSC Message Structure
+# Returned OSC Message Structure
+# /harp/id/hello/value_int32
 # /harp/id/angle/angle_id/value_int32
 # /harp/id/rotations/value_int32
 # /harp/id/speed/value_float32
 # /harp/id/acceleration/value_float32
+
+# Send OSC Message Structure
+# /toharp/id/hello
 
 from OSC import OSCClient, OSCMessage
 import serial
@@ -24,12 +28,13 @@ client = OSCClient()
 client.connect( ("127.0.0.1", 12000) )
 
 prev_rotations = 0
+module_id = -1
 
 # may need to run python -m serial.tools.list_ports
 # from the terminal to find correct port name
 #ser = serial.Serial("/dev/tty.usbmodem1d11")  
-ser = serial.Serial("/dev/tty.usbmodemfd121")
-#ser = serial.Serial("/dev/ttyACM0")
+#ser = serial.Serial("/dev/tty.usbmodemfd121")
+ser = serial.Serial("/dev/ttyACM0")
 
 # sends OSC message for angle
 def send_angle( harp_id, angle_id, angle):
@@ -54,9 +59,19 @@ def send_acceleration( harp_id, acceleration ):
     addr = "/harp/{0}/acceleration".format( harp_id )
     client.send( OSCMessage( addr, acceleration ) )
 
+# send returned hello message
+def send_hello( harp_id ):
+    addr = "/harp/{0}/hello".format( harp_id )
+    client.send( OSCMessage( addr, 1 ) )
+
+# received message to say hello to harp
+def send_hello_to_harp( harp_id ):
+    ser.write("hello\n");
+
 
 # read in next line from serial port and parse
 def process_next_line( ):
+    global module_id
     line_in = ser.readline()
     # print line_in
       
@@ -66,17 +81,24 @@ def process_next_line( ):
 
     if "angle1" in serial_dict:
         a = int( serial_dict["angle1"].strip(',') )
-        send_angle( 45, 1, a )
+        send_angle( module_id, 1, a )
 
     if "rotations" in serial_dict:
         r = int( serial_dict["rotations"].strip(',') )
-        send_rotations( 45, r )
+        send_rotations( module_id, r )
         # calculate and send speed
         s = calculate_speed( r )
-        send_speed( 45, s )
+        send_speed( module_id, s )
         # calculate and send acceleration 
         a = calculate_acceleration( r)
-        send_acceleration( 45, a )
+        send_acceleration( module_id, a )
+	
+    if "id" in serial_dict:
+        module_id = int( serial_dict["id"].strip(',') )
+   
+    if "hello" in serial_dict:
+        print "harp says hi"
+        send_hello( module_id )   
 
 
 
@@ -92,11 +114,18 @@ def calculate_acceleration( rotations ):
     return rotations
 
 
+
 def main():    
     print ser.portstr       # check which port was really used
+    i=0    
     try:
-        while 1:    
+        while 1:
+            i = i + 1 
             process_next_line()
+            if i > 50:
+                print "send hello"
+                send_hello_to_harp( 109 )
+                i=0
     except KeyboardInterrupt: 
         ser.close()
         print "Goodbye!"
