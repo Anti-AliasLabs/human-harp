@@ -18,7 +18,7 @@
 
 
 // module ID
-#define MODULE_ID 100
+#define MODULE_ID 109
 
 // pins
 int pinHall1 = 2;
@@ -77,9 +77,10 @@ void loop() {
   if (stringComplete) {
     inputString.trim();
     // request to identify
-    if( inputString == "identify" ) {
-      Serial.print("id:");
-      Serial.println(MODULE_ID);
+    if( inputString == "hello" ) {
+      Serial.print("hello:");
+      Serial.print(MODULE_ID);
+      Serial.println(",");
     }
     // request reset
     if( inputString == "reset" ) {
@@ -96,7 +97,9 @@ void loop() {
   angleValue2 = ambientLight2 - analogRead( pinAngle2 );
 
   // print via Serial the different values
-  Serial.print("hall1:");
+  Serial.print("id:");
+  Serial.print(MODULE_ID);
+  Serial.print(", hall1:");
   Serial.print( hallValue1 );
   Serial.print(", hall2:" );
   Serial.print( hallValue2 );
@@ -110,6 +113,7 @@ void loop() {
 
   delay( 200 );
 }
+
 //------------------------------------------------------------------
 // called when new serial data arrives
 void serialEvent() {
