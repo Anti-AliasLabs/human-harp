@@ -3,7 +3,9 @@ import processing.serial.*;
 Serial myPort;
 String inString = "";
 
-int hall1 = -2; // haven't recieved any data from Arduino
+int moduleID = -1; // haven't received any data from Arduino
+
+int hall1 = -2; // haven't received any data from Arduino
 int hall2 = -2;
 int rotations = -1;
 
@@ -21,12 +23,33 @@ void setup() {
 
 void draw() {
   background( 50 );
+  drawResetButton();
+  drawID();
   drawHalls();
   drawRotations();
   drawAngle();
 }
 
 //----DRAWING FUNCTIONS----------------------------------
+void drawResetButton() {
+  fill(100, 0, 0);
+  rect(width-90, 143, 80, 25);
+  fill(200);
+  text("Reset", width-70, 160);
+}
+
+void drawID () {
+  fill(255);
+  text("Module ID:", width-110, 20);
+  text(moduleID, width-30, 20 );  
+
+  // button to request ID
+  fill(100);
+  rect(width-90, 43, 80, 25);
+  fill(200);
+  text("Get ID", width-70, 60);
+}
+
 void drawHalls() {
   noStroke();
 
@@ -94,14 +117,13 @@ void drawAngle( ) {
   fill(255);
   text("Angle 1", 180, 200);
   text( angle1, 200, 230 );
-  
+
   fill( 11, 85, 78 );
   float angleBar = map( angle1, 5, 30, 0, width-230-50 ); 
   rect( 230, 210, angleBar, 25 );
-  
+
   fill( 0, 71, 50 );
   rect( 230, 210, 3, 25 ); // zero marker
-  
 }
 
 //----SERIAL FUNCTIONS----------------------------------
@@ -137,6 +159,28 @@ void parseString( String serialString ) {
     if (label.equals("angle1")) {
       angle1 = int(trimVal);
     }
+    if (label.equals("id")) {
+      moduleID = int(trimVal);
+    }
+  }
+}
+
+//----SERIAL FUNCTIONS----------------------------------
+void mousePressed() {
+  // identify button clicked
+  if ( mouseX > width-90 && 
+    mouseX < width-90+80 &&
+    mouseY > 43 &&
+    mouseY < 43+25) {
+    myPort.write("identify\n");
+  } 
+
+  // reset button clicked
+  if ( mouseX > width-90 &&
+    mouseX < width-90+80 &&
+    mouseY > 143 &&
+    mouseY < 143+25 ) {
+    myPort.write("reset\n");
   }
 }
 
