@@ -24,6 +24,7 @@ void setup() {
 void draw() {
   background( 50 );
   drawResetButton();
+  drawHelloButton();
   drawID();
   drawHalls();
   drawRotations();
@@ -42,12 +43,14 @@ void drawID () {
   fill(255);
   text("Module ID:", width-110, 20);
   text(moduleID, width-30, 20 );  
+}
 
+void drawHelloButton() {
   // button to request ID
   fill(100);
   rect(width-90, 43, 80, 25);
-  fill(200);
-  text("Get ID", width-70, 60);
+  fill(9, 200, 0);
+  text("hello", width-70, 60);
 }
 
 void drawHalls() {
@@ -172,7 +175,7 @@ void mousePressed() {
     mouseX < width-90+80 &&
     mouseY > 43 &&
     mouseY < 43+25) {
-    myPort.write("identify\n");
+    myPort.write("hello\n");
   } 
 
   // reset button clicked
