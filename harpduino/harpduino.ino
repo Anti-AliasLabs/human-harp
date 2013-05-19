@@ -16,6 +16,10 @@
  D10    IR LED 2
  */
 
+
+// module ID
+#define MODULE_ID 100
+
 // pins
 int pinHall1 = 2;
 int pinHall2 = 3;
@@ -37,6 +41,11 @@ int ambientLight2;
 int angleValue1;
 int angleValue2;
 
+String inputString = " ";
+boolean stringComplete = false;
+String identifyString = "identify";
+
+//------------------------------------------------------------------
 void setup() {
   Serial.begin( 9600 ); 
 
@@ -45,13 +54,17 @@ void setup() {
   pinMode( resetButton, INPUT );
   pinMode( pinIR1, OUTPUT );
   pinMode( pinIR2, OUTPUT );
-  
+
+  // reserve 200 bytes for the input string
+  inputString.reserve(200); 
+
   resetSensors();
 
   attachInterrupt( 0, firstHallTripped, CHANGE );
   attachInterrupt( 1, secondHallTripped, CHANGE );
 }
 
+//------------------------------------------------------------------
 void loop() {
 
   // if button is pressed
@@ -59,7 +72,25 @@ void loop() {
     // reset the values
     resetSensors();
   }
-  
+
+  // if newline has arrived from serial in
+  if (stringComplete) {
+    inputString.trim();
+    // request to identify
+    if( inputString == "identify" ) {
+      Serial.print("id:");
+      Serial.println(MODULE_ID);
+    }
+    // request reset
+    if( inputString == "reset" ) {
+      resetSensors(); 
+    }
+
+    // clear the string
+    inputString = " ";
+    stringComplete = false;
+  }
+
   // read in angle sensors
   angleValue1 = ambientLight1 - analogRead( pinAngle1 );
   angleValue2 = ambientLight2 - analogRead( pinAngle2 );
@@ -79,22 +110,41 @@ void loop() {
 
   delay( 200 );
 }
+//------------------------------------------------------------------
+// called when new serial data arrives
+void serialEvent() {
+  while( Serial.available() ) {
+    // get the new byte
+    char inChar = (char)Serial.read();
 
+    // if incoming character is a newline, set flag
+    if (inChar == '\n') {
+      stringComplete = true;
+    }  
+    else {
+      // add to inputString
+      inputString += inChar; 
+    }
+  }
+}
+
+//------------------------------------------------------------------
 // reset rotations count and background light
 void resetSensors() {
   rotationCount = 0;
-  
+
   digitalWrite( pinIR1, LOW );
   digitalWrite( pinIR2, LOW );
   ambientLight1 = analogRead( pinAngle1 );
   ambientLight2 = analogRead( pinAngle2 );
   delay( 10 );
-  
+
   digitalWrite( pinIR1, HIGH );
   digitalWrite( pinIR2, HIGH );
-  
+
 }
 
+//------------------------------------------------------------------
 // called when magnetic field changes
 // across first Hall Effect sensor
 void firstHallTripped() {
@@ -102,6 +152,7 @@ void firstHallTripped() {
   updateRotations();
 }
 
+//------------------------------------------------------------------
 // called when magnetic field changes
 // across second Hall Effect sensor
 void secondHallTripped() {
@@ -109,7 +160,7 @@ void secondHallTripped() {
   updateRotations();
 }
 
-
+//------------------------------------------------------------------
 void updateRotations() {
   // DETECTING INCREASE VS DECREASE
   /*
@@ -136,6 +187,10 @@ void updateRotations() {
   prevHallValue1 = hallValue1;
   prevHallValue2 = hallValue2;
 }
+
+
+
+
 
 
 
