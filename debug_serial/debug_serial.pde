@@ -3,6 +3,9 @@ import processing.serial.*;
 Serial myPort;
 String inString = "";
 
+String helloResponse = " ";
+int helloTimer = 0;
+
 int moduleID = -1; // haven't received any data from Arduino
 
 int hall1 = -2; // haven't received any data from Arduino
@@ -42,15 +45,20 @@ void drawResetButton() {
 void drawID () {
   fill(255);
   text("Module ID:", width-110, 20);
-  text(moduleID, width-30, 20 );  
+  text(moduleID, width-30, 20 );
 }
 
 void drawHelloButton() {
   // button to request ID
-  fill(100);
+  fill(0, 100, 0);
   rect(width-90, 43, 80, 25);
-  fill(9, 200, 0);
-  text("hello", width-70, 60);
+  fill(200);
+  text("Hello", width-70, 60);
+
+  if ( helloTimer > millis()-3000 ) {
+    fill(0,150, 0);
+    text(helloResponse, width-100, 80);
+  }
 }
 
 void drawHalls() {
@@ -122,7 +130,7 @@ void drawAngle( ) {
   text( angle1, 200, 230 );
 
   fill( 11, 85, 78 );
-  float angleBar = map( angle1, 5, 30, 0, width-230-50 ); 
+  float angleBar = map( angle1, 5, 120, 0, width-230-50 ); 
   rect( 230, 210, angleBar, 25 );
 
   fill( 0, 71, 50 );
@@ -165,12 +173,16 @@ void parseString( String serialString ) {
     if (label.equals("id")) {
       moduleID = int(trimVal);
     }
+    if (label.equals("hello")) {
+      helloResponse = moduleID +" says hello";
+      helloTimer = millis();
+    }
   }
 }
 
 //----SERIAL FUNCTIONS----------------------------------
 void mousePressed() {
-  // identify button clicked
+  // hello button clicked
   if ( mouseX > width-90 && 
     mouseX < width-90+80 &&
     mouseY > 43 &&
