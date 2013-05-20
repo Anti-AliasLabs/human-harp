@@ -18,7 +18,7 @@
 #include <Wire.h>
 
 // module ID
-#define MODULE_ID 109
+#define MODULE_ID 102
 
 // pins
 int pinHall1 = 2;
@@ -84,14 +84,39 @@ void loop() {
 //------------------------------------------------------------------
 // called when I2C request received
 void requestEvent() {
- // print via Serial the different values
-  Wire.write("id:");
-  Wire.write(MODULE_ID);
-  Wire.write(", rotations:");
-  Wire.write( rotationCount );
-  Wire.write( ", angle1:" );
-  Wire.write( angleValue1 );
-  Wire.write(",\n"); 
+ char* outputChars = constructMessage( MODULE_ID, rotationCount, angleValue1 );
+ Wire.write( outputChars );
+}
+
+//--------------------------------------------------------
+char* constructMessage(int id, int rotations, int angle)
+{
+  // create message to return
+  // it must be long enough to hold the final result
+  // though 1024 chars may be a bit unnecessary!
+  char message[40];
+
+  // create char arrays to hold the numbers we
+  // will convert to strings
+  char idVal[12];
+  char rotationsVal[12];
+  char angleVal[12];
+
+  // set the message to be the empty string
+  strcpy(message, "");
+
+  // now concatenate all the things we need, using itoa to turn
+  // numbers into strings
+  strcat(message,"\nid:");
+  strcat(message,itoa(id, idVal, 10));
+  strcat(message,", rotations:");
+  strcat(message,itoa(rotations, rotationsVal,10));
+  strcat(message,", angle:");
+  strcat(message,itoa(angle, angleVal, 10));
+  strcat(message, "\n");
+
+  // return the message
+  return message;
 }
 
 

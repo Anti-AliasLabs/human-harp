@@ -11,7 +11,7 @@
 
 // IDs of modules
 int harps[] = { 
-  101, 102, 103, 104, 105, 106, 107, 108 };
+  101, 102 };
 int numHarps = 2;
 
 void setup() {
@@ -22,7 +22,7 @@ void setup() {
 void loop()
 {
   for( int i=0; i<numHarps; i++ ){
-    Wire.requestFrom( i, 35 );    // request 35 bytes from slave device #i
+    Wire.requestFrom( i, 40 );    // request 35 bytes from slave device #i
 
 
     while( Wire.available() ) {    // slave may send less than requested 
