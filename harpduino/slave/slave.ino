@@ -53,6 +53,7 @@ void setup() {
   pinMode( pinHall1, INPUT );
   pinMode( pinHall2, INPUT );
   pinMode( resetButton, INPUT );
+  digitalWrite( resetButton, HIGH ); // internal pullup
   pinMode( pinIR1, OUTPUT );
   pinMode( pinIR2, OUTPUT );
 
@@ -69,7 +70,7 @@ void setup() {
 void loop() {
 
   // if button is pressed
-  if ( digitalRead( resetButton ) ) {
+  if ( digitalRead( !resetButton ) ) {
     // reset the values
     resetSensors();
   }

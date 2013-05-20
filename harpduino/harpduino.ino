@@ -26,7 +26,7 @@ int pinHall2 = 3;
 int resetButton = 6;
 int pinIR1 = 4;
 int pinIR2 = 5;
-int pinAngle1 = A1;
+int pinAngle1 = A0;
 int pinAngle2 = A2;
 
 // other variables
@@ -52,6 +52,7 @@ void setup() {
   pinMode( pinHall1, INPUT );
   pinMode( pinHall2, INPUT );
   pinMode( resetButton, INPUT );
+  digitalWrite( resetButton, HIGH ); // internal pullup
   pinMode( pinIR1, OUTPUT );
   pinMode( pinIR2, OUTPUT );
 
@@ -68,7 +69,7 @@ void setup() {
 void loop() {
 
   // if button is pressed
-  if ( digitalRead( resetButton ) ) {
+  if ( digitalRead( !resetButton ) ) {
     // reset the values
     resetSensors();
   }
