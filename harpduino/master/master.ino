@@ -11,8 +11,8 @@
 
 // IDs of modules
 int harps[] = { 
-  101, 102, 103, 104 };
-int numHarps = 4;
+  101, 102, 103, 104, 105, 106 };
+int numHarps = 6;
 
 void setup() {
   Wire.begin();        // join i2c bus (address optional for master)
@@ -29,7 +29,9 @@ void loop()
       char c = Wire.read(); // receive a byte as character
       Serial.print(c);         // print the character
     }
+    delay(50);
   }
-  delay(50);
+
 }
+
 

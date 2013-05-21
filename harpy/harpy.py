@@ -31,8 +31,11 @@ server = OSCServer( ("127.0.0.1", 12001) )
 server.timeout = 0
 run = True
 
-prev_rotations = 0
+prev_rotations = [0]*1000
+
 module_id = -1
+
+
 
 # may need to run python -m serial.tools.list_ports
 # from the terminal to find correct port name
@@ -70,7 +73,7 @@ def process_server():
 # sends OSC message for angle
 def send_angle( harp_id, angle_id, angle):
     addr = "/harp/{0}/angle/{1}".format( harp_id, angle_id )
-    print "angle is being sent: ", angle
+    #print "angle is being sent: ", angle
     client.send( OSCMessage( addr, angle ) )
     
 
@@ -113,13 +116,15 @@ def process_next_line( ):
 
     if "angle" in serial_dict:
         a = int( serial_dict["angle"].strip(',') )
+        print "angle: ", a
         send_angle( module_id, 1, a )
 
     if "rotations" in serial_dict:
         r = int( serial_dict["rotations"].strip(',') )
         send_rotations( module_id, r )
+
         # calculate and send speed
-        s = calculate_speed( r )
+        s = calculate_speed( module_id,r )
         send_speed( module_id, s )
         # calculate and send acceleration 
         a = calculate_acceleration( r)
@@ -135,10 +140,11 @@ def process_next_line( ):
 
 
 # calculate speed
-def calculate_speed( rotations ):
+def calculate_speed(module_id, rotations ):
     global prev_rotations
-    speed = abs(rotations - prev_rotations)
-    prev_rotations = rotations
+    #print "prev: ", prev_rotations, "    new: ", rotations
+    speed = abs(rotations - prev_rotations[module_id])
+    prev_rotations[module_id] = rotations
     return speed
 
 # calculate acceleration
