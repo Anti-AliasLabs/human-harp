@@ -37,8 +37,8 @@ module_id = -1
 # may need to run python -m serial.tools.list_ports
 # from the terminal to find correct port name
 #ser = serial.Serial("/dev/tty.usbmodem1d11")  
-#ser = serial.Serial("/dev/tty.usbmodemfd121")
-ser = serial.Serial("/dev/ttyACM0")
+ser = serial.Serial("/dev/tty.usbmodemfd121")
+#ser = serial.Serial("/dev/ttyACM0")
 
 
 
@@ -70,6 +70,7 @@ def process_server():
 # sends OSC message for angle
 def send_angle( harp_id, angle_id, angle):
     addr = "/harp/{0}/angle/{1}".format( harp_id, angle_id )
+    print "angle is being sent: ", angle
     client.send( OSCMessage( addr, angle ) )
     
 
@@ -110,8 +111,8 @@ def process_next_line( ):
     # print serial_dict
     # send rotations OSC
 
-    if "angle1" in serial_dict:
-        a = int( serial_dict["angle1"].strip(',') )
+    if "angle" in serial_dict:
+        a = int( serial_dict["angle"].strip(',') )
         send_angle( module_id, 1, a )
 
     if "rotations" in serial_dict:

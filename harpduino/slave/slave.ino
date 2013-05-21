@@ -18,7 +18,7 @@
 #include <Wire.h>
 
 // module ID
-#define MODULE_ID 102
+#define MODULE_ID 101
 
 // pins
 int pinHall1 = 2;
@@ -26,7 +26,7 @@ int pinHall2 = 3;
 int resetButton = 6;
 int pinIR1 = 4;
 int pinIR2 = 5;
-int pinAngle1 = A1;
+int pinAngle1 = A0;
 int pinAngle2 = A2;
 
 // other variables
@@ -78,6 +78,7 @@ void loop() {
   // read in angle sensors
   angleValue1 = ambientLight1 - analogRead( pinAngle1 );
   angleValue2 = ambientLight2 - analogRead( pinAngle2 );
+
 
   delay( 20 );
 }

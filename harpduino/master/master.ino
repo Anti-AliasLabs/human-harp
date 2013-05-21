@@ -11,8 +11,8 @@
 
 // IDs of modules
 int harps[] = { 
-  101, 102 };
-int numHarps = 2;
+  101, 102, 103, 104 };
+int numHarps = 4;
 
 void setup() {
   Wire.begin();        // join i2c bus (address optional for master)
@@ -22,7 +22,7 @@ void setup() {
 void loop()
 {
   for( int i=0; i<numHarps; i++ ){
-    Wire.requestFrom( i, 40 );    // request 35 bytes from slave device #i
+    Wire.requestFrom( harps[i], 40 );    // request 35 bytes from slave device #i
 
 
     while( Wire.available() ) {    // slave may send less than requested 
