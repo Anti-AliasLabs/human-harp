@@ -69,7 +69,7 @@ void setup() {
 void loop() {
 
   // if button is pressed
-  if ( digitalRead( !resetButton ) ) {
+  if ( digitalRead( resetButton ) ) {
     // reset the values
     resetSensors();
   }
