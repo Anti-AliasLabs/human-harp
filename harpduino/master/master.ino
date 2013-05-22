@@ -11,8 +11,8 @@
 
 // IDs of modules
 int harps[] = { 
-  101, 102, 103, 104, 105, 106 };
-int numHarps = 6;
+  101, 102, 103, 104, 105, 106, 107, 108 };
+int numHarps = 8;
 
 void setup() {
   Wire.begin();        // join i2c bus (address optional for master)

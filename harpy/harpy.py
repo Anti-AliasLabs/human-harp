@@ -114,6 +114,10 @@ def process_next_line( ):
     # print serial_dict
     # send rotations OSC
 
+    if "id" in serial_dict:
+        module_id = int( serial_dict["id"].strip(',') )
+        print "I just set module Id for ", module_id
+   
     if "angle" in serial_dict:
         a = int( serial_dict["angle"].strip(',') )
         print "angle: ", a
@@ -130,12 +134,11 @@ def process_next_line( ):
         a = calculate_acceleration( r)
         send_acceleration( module_id, a )
 	
-    if "id" in serial_dict:
-        module_id = int( serial_dict["id"].strip(',') )
-   
+
     if "hello" in serial_dict:
         print "harp says hi"
         send_hello( module_id )   
+
 
 
 
