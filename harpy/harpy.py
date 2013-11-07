@@ -40,9 +40,9 @@ module_id = -1
 # may need to run python -m serial.tools.list_ports
 # from the terminal to find correct port name
 #ser = serial.Serial("/dev/tty.usbmodem1d11")  
-ser = serial.Serial("/dev/tty.usbmodemfd121")
+# ser = serial.Serial("/dev/tty.usbmodemfd121")
 #ser = serial.Serial("/dev/ttyACM0")
-
+ser = serial.Serial("/dev/tty.usbmodem1421")
 
 
 
@@ -126,6 +126,7 @@ def process_next_line( ):
     if "rotations" in serial_dict:
         r = int( serial_dict["rotations"].strip(',') )
         send_rotations( module_id, r )
+        print "rotation: ", r
 
         # calculate and send speed
         s = calculate_speed( module_id,r )
