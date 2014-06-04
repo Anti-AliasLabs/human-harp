@@ -112,7 +112,7 @@ void loop() {
   Serial.print( angleValue2 );
   Serial.println(",");
 
-  delay( 200 );
+  delay( 10 );
 }
 
 //------------------------------------------------------------------
