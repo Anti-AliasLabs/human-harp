@@ -8,8 +8,6 @@ OscP5 oscP5;
 NetAddress myRemoteLocation;
 byte[] rxData;
 
-String inString = "";
-
 String helloResponse = " ";
 int helloTimer = 0;
 
@@ -146,7 +144,8 @@ void drawAngle( ) {
 //----OSC FUNCTIONS----------------------------------
 void oscEvent(OscMessage theOscMessage) {
   String addrPattern = theOscMessage.addrPattern();
-
+  String rxString = "";
+  
   // Print address pattern to terminal
   println(addrPattern);
 
@@ -155,14 +154,14 @@ void oscEvent(OscMessage theOscMessage) {
     rxData = theOscMessage.get(0).blobValue();
     println(rxData);
     for ( int i=0; i<rxData.length; i++ ) {
-      inString +=(char)rxData[i];
+      rxString +=(char)rxData[i];
     }
-    println(inString);
-    parseString( inString );
+    println(rxString);
+    parseString( rxString );
   }
 }
 
-//----PASRING FUNCTIONS----------------------------------
+//----PARSING FUNCTIONS----------------------------------
 void parseString( String fullString ) { 
   // split string on commas
   String pairs[] = split(fullString, ',');
@@ -200,6 +199,7 @@ void parsePair( String stringPair ) {
     if (label.equals("hello")) {
       helloResponse = moduleID +" says hello";
       helloTimer = millis();
+      println("....starting hello timer");
     }
   }
 }
@@ -213,9 +213,9 @@ void mousePressed() {
     mouseY < 43+25) {
     //myPort.write("hello\n");
     byte[] outMessage = "hello\n".getBytes();
-    OscMessage myMessage = new OscMessage("/outputs/serial/write/1");
+    OscMessage myMessage = new OscMessage("/outputs/serial/1");
 
-    myMessage.add(OscMessage.makeBlob(outMessage)); /* add an int to the osc message */
+    myMessage.add(outMessage); /* add an int to the osc message */
 
     /* send the message */
     oscP5.send(myMessage, myRemoteLocation);
@@ -227,6 +227,13 @@ void mousePressed() {
     mouseY > 143 &&
     mouseY < 143+25 ) {
     //myPort.write("reset\n");
+    byte[] outMessage = "reset\n".getBytes();
+    OscMessage myMessage = new OscMessage("/outputs/serial/1");
+
+    myMessage.add(outMessage); /* add an int to the osc message */
+
+    /* send the message */
+    oscP5.send(myMessage, myRemoteLocation);
   }
 }
 
