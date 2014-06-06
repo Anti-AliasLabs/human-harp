@@ -6,6 +6,8 @@ int[] selectedChannels = {
 };
 OscP5 oscP5;
 NetAddress myRemoteLocation;
+// To send to Pd
+NetAddress myLocalLocation;
 byte[] rxData;
 
 String helloResponse = " ";
@@ -25,6 +27,7 @@ void setup() {
   oscP5 = new OscP5(this, 8000);  // listen to port 8000
   //myRemoteLocation = new NetAddress("169.254.125.210", 9000);
   myRemoteLocation = new NetAddress("169.254.1.1", 9000);
+  myLocalLocation = new NetAddress("localhost", 9001);
 }
 
 void draw() {
@@ -201,6 +204,12 @@ void parsePair( String stringPair ) {
       helloTimer = millis();
       println("....starting hello timer");
     }
+    
+    // Relay all messages to a local port
+    OscMessage myLocalMessage = new OscMessage("/outputs/"+label);
+    myLocalMessage.add(int(trimVal));
+    oscP5.send(myLocalMessage, myLocalLocation);
+    
   }
 }
 
