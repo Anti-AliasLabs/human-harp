@@ -174,16 +174,34 @@ void oscEvent(OscMessage theOscMessage) {
       string += (char)blob[i];
     }
     print(string);
-
-    // Relay all messages to a local port
-    OscMessage myLocalMessage = new OscMessage(string);
-    oscP5.send(myLocalMessage, myLocalLocation);
     
     // Decode arguments
     String values[] = split(string, ',');
     if(values.length < 5) {
       return;
     }
+
+    // Relay all messages to a local port
+    OscMessage distanceMessage = new OscMessage("/distance");
+    distanceMessage.add(int(values[0]));
+    oscP5.send(distanceMessage, myLocalLocation);
+    
+    OscMessage velocityMessage = new OscMessage("/velocity");
+    velocityMessage.add(int(values[1]));
+    oscP5.send(velocityMessage, myLocalLocation);
+    
+    OscMessage azimuthMessage = new OscMessage("/azimuth");
+    azimuthMessage.add(int(values[2]));
+    oscP5.send(azimuthMessage, myLocalLocation);
+    
+    OscMessage elevationMessage = new OscMessage("/elevation");
+    elevationMessage.add(int(values[3]));
+    oscP5.send(elevationMessage, myLocalLocation);
+    
+    OscMessage angularRateMessage = new OscMessage("/angularRate");
+    angularRateMessage.add(float(values[4]));
+    oscP5.send(angularRateMessage, myLocalLocation);
+    
     distance = float(values[0]);
     velocity = float(values[1]);
     azimuth = float(values[2]) / 100;
